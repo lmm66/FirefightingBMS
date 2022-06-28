@@ -1,0 +1,82 @@
+<template>
+  <div
+    style="position: relative; height: 580px; width: 100%"
+    ref="echarts"
+    id="main"
+  ></div>
+</template>
+
+<script>
+import * as echarts from "echarts";
+import "echarts/extension/bmap/bmap";
+require("echarts/extension/bmap/bmap");
+export default {
+  mounted() {
+    var ROOT_PATH =
+      "https://fastly.jsdelivr.net/gh/apache/echarts-website@asf-site/examples";
+    var app = {};
+
+    var chartDom = document.getElementById("main");
+    var myChart = echarts.init(chartDom);
+    var option;
+    var data = [
+      { name: "盐城", value: 9 },
+      { name: "日照", value: 12 },
+      { name: "青岛", value: 12 },
+      { name: "鄂尔多斯", value: 9 },
+      { name: "招远", value: 12 },
+      { name: "舟山", value: 12 },
+      { name: "金昌", value: 9 },
+      { name: "云浮", value: 12 },
+      { name: "南通", value: 12 },
+    ];
+    $.get(ROOT_PATH + "/data/asset/data/hangzhou-tracks.json", function (data) {
+      var points = [].concat.apply(
+        [],
+        data.map(function (track) {
+          return track.map(function (seg) {
+            return seg.coord.concat([1]);
+          });
+        })
+      );
+      myChart.setOption(
+        (option = {
+          animation: false,
+          bmap: {
+            center: [120.13066322374, 30.240018034923],
+            zoom: 14,
+            roam: true,
+          },
+          visualMap: {
+            show: false,
+            top: "top",
+            min: 0,
+            max: 5,
+            seriesIndex: 0,
+            calculable: true,
+            inRange: {
+              color: ["blue", "blue", "green", "yellow", "red"],
+            },
+          },
+          series: [
+            {
+              type: "heatmap",
+              coordinateSystem: "bmap",
+              data: points,
+              pointSize: 6,
+              blurSize: 4,
+            },
+          ],
+        })
+      );
+      // 添加百度地图插件
+      var bmap = myChart.getModel().getComponent("bmap").getBMap();
+      bmap.addControl(new BMap.MapTypeControl());
+    });
+    option && myChart.setOption(option);
+  },
+};
+</script>
+
+<style>
+</style>
