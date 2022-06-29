@@ -1,10 +1,9 @@
 <template>
-  <div>
+  <div class="body">
     <iframe
       id="iframeId"
       src="http://192.168.10.9:5001/"
       frameborder="0"
-      class="pc iframe"
       scrolling="auto"
       @load="loadfrom"
     >
@@ -18,5 +17,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.bod {
+  margin-left: -21px;
+  margin-right: -20px;
+  margin-bottom: -100px;
+}
 </style>

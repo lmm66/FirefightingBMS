@@ -44,7 +44,7 @@ const router = new VueRouter({
                 {
                     path: 'camera',
                     name: 'camera',
-                    meta:{isAuth:true, title:'摄像头分布'},
+                    meta:{isAuth:true, title:'道路检测标记'},
                     component: () => import ("../pages/Camera.vue"),
                 },
                 {

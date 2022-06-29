@@ -19,17 +19,6 @@ export default {
     var chartDom = document.getElementById("main");
     var myChart = echarts.init(chartDom);
     var option;
-    var data = [
-      { name: "盐城", value: 9 },
-      { name: "日照", value: 12 },
-      { name: "青岛", value: 12 },
-      { name: "鄂尔多斯", value: 9 },
-      { name: "招远", value: 12 },
-      { name: "舟山", value: 12 },
-      { name: "金昌", value: 9 },
-      { name: "云浮", value: 12 },
-      { name: "南通", value: 12 },
-    ];
     $.get(ROOT_PATH + "/data/asset/data/hangzhou-tracks.json", function (data) {
       var points = [].concat.apply(
         [],

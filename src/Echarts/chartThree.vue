@@ -11,16 +11,16 @@ export default {
     let myChart2 = echarts.init(chartDom2);
     let option2;
 
-    let base = +new Date(2019, 3, 30);
+    let base = +new Date(2017, 3, 30);
     let oneDay = 24 * 3600 * 1000;
     let date = [];
-    let data = [Math.random() * 600];
-    for (let i = 1; i < 20000; i++) {
+    let data = [Math.random() * 40];
+    for (let i = 1; i < 1800; i++) {
       var now = new Date((base += oneDay));
       date.push(
         [now.getFullYear(), now.getMonth() + 1, now.getDate()].join("/")
       );
-      data.push(Math.round((Math.random() - 0.5) * 20 + data[i - 1]));
+      data.push(Math.round((Math.random() - 0.5) * 10 + data[i - 1]));
     }
     option2 = {
       tooltip: {
@@ -32,7 +32,7 @@ export default {
       title: {
         top: "5px",
         left: "center",
-        text: "最高气温分布",
+        text: "气温分布( °C)",
       },
       toolbox: {
         feature: {

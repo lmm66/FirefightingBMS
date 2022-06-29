@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 220px" ref="echarts" id="main"></div>
+  <div style="height: 240px" ref="echarts" id="main"></div>
 </template>
 
 <script>
@@ -7,190 +7,77 @@ import * as echarts from "echarts";
 export default {
   name: "chartOne",
   mounted() {
-    let chartDom = document.getElementById("main");
-    let myChart = echarts.init(chartDom);
-    let option;
+    var chartDom = document.getElementById("main");
+    var myChart = echarts.init(chartDom);
+    var option;
+
+    // prettier-ignore
+    const data = [["2020-03-25", 24], ["2020-03-26", 26], ["2020-03-27", 25], ["2020-03-28", 22], ["2020-03-29", 27], ["2020-03-30", 297], ["2020-03-31", 146], ["2020-04-1", 214], ["2020-04-2", 92], ["2020-04-3", 75], ["2020-04-4", 58], ["2020-04-5", 44], ["2020-04-6", 38], ["2020-04-7", 29], ["2020-04-8", 27], ["2020-04-9", 26], ["2020-04-10", 29]];
+    const dateList = data.map(function (item) {
+      return item[0];
+    });
+    const valueList = data.map(function (item) {
+      return item[1];
+    });
     option = {
-      color: ["#80FFA5", "#00DDFF", "#37A2FF", "#FF0087", "#FFBF00"],
-      title: {},
+      // Make gradient line here
+      visualMap: [
+        {
+          show: false,
+          type: "continuous",
+          seriesIndex: 0,
+          min: 0,
+          max: 400,
+        },
+        {
+          show: false,
+          type: "continuous",
+          seriesIndex: 1,
+          dimension: 0,
+          min: 0,
+          max: dateList.length - 1,
+        },
+      ],
+      title: [
+        {
+          left: "center",
+          top: "-1%",
+          text: "皮家山森林火灾温度变化",
+        },
+      ],
       tooltip: {
         trigger: "axis",
-        axisPointer: {
-          type: "cross",
-          label: {
-            backgroundColor: "#6a7985",
-          },
-        },
-      },
-      legend: {
-        data: ["Line 1", "Line 2", "Line 3", "Line 4", "Line 5"],
-      },
-      toolbox: {
-        feature: {
-          saveAsImage: {},
-        },
-      },
-      grid: {
-        top: "15%",
-        left: "10px",
-        right: "70px",
-        bottom: "9%",
-        containLabel: true,
       },
       xAxis: [
         {
-          type: "category",
-          boundaryGap: false,
-          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+          data: dateList,
+        },
+        {
+          data: dateList,
+          gridIndex: 1,
         },
       ],
       yAxis: [
+        {},
         {
-          type: "value",
+          gridIndex: 1,
         },
+      ],
+      grid: [
+        {
+          top: "10%",
+        },
+        {},
       ],
       series: [
         {
-          name: "受灾程度",
           type: "line",
-          stack: "Total",
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
           showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: "rgb(128, 255, 165)",
-              },
-              {
-                offset: 1,
-                color: "rgb(1, 191, 236)",
-              },
-            ]),
-          },
-          emphasis: {
-            focus: "series",
-          },
-          data: [140, 232, 101, 264, 90, 340, 250],
-        },
-        {
-          name: "Line 2",
-          type: "line",
-          stack: "Total",
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: "rgb(0, 221, 255)",
-              },
-              {
-                offset: 1,
-                color: "rgb(77, 119, 255)",
-              },
-            ]),
-          },
-          emphasis: {
-            focus: "series",
-          },
-          data: [120, 282, 111, 234, 220, 340, 310],
-        },
-        {
-          name: "Line 3",
-          type: "line",
-          stack: "Total",
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: "rgb(55, 162, 255)",
-              },
-              {
-                offset: 1,
-                color: "rgb(116, 21, 219)",
-              },
-            ]),
-          },
-          emphasis: {
-            focus: "series",
-          },
-          data: [320, 132, 201, 334, 190, 130, 220],
-        },
-        {
-          name: "Line 4",
-          type: "line",
-          stack: "Total",
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: "rgb(255, 0, 135)",
-              },
-              {
-                offset: 1,
-                color: "rgb(135, 0, 157)",
-              },
-            ]),
-          },
-          emphasis: {
-            focus: "series",
-          },
-          data: [220, 402, 231, 134, 190, 230, 120],
-        },
-        {
-          name: "Line 5",
-          type: "line",
-          stack: "Total",
-          smooth: true,
-          lineStyle: {
-            width: 0,
-          },
-          showSymbol: false,
-          label: {
-            show: true,
-            position: "top",
-          },
-          areaStyle: {
-            opacity: 0.8,
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              {
-                offset: 0,
-                color: "rgb(255, 191, 0)",
-              },
-              {
-                offset: 1,
-                color: "rgb(224, 62, 76)",
-              },
-            ]),
-          },
-          emphasis: {
-            focus: "series",
-          },
-          data: [220, 302, 181, 234, 210, 290, 150],
+          data: valueList,
         },
       ],
     };
+
     option && myChart.setOption(option);
   },
 };

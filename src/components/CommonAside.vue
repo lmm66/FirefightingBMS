@@ -31,7 +31,7 @@
       </template>
       <el-menu-item-group v-for="SubItem in item.children" :key="SubItem.path">
         <el-menu-item
-          style="text-indent: -13px; margin-top: -8px"
+          class="sub_menu"
           :index="SubItem.path"
           @click="clickMenu(SubItem)"
           ><i :class="'el-icon-' + SubItem.icon"></i
@@ -80,7 +80,7 @@ export default {
             {
               path: "/camera",
               name: "camera",
-              label: "摄像头分布",
+              label: "道路检测标记",
               icon: "s-marketing",
             },
           ],
@@ -146,6 +146,12 @@ export default {
     color: #fff;
     text-align: center;
     line-height: 48px;
+  }
+}
+.el-menu-item-group {
+  .sub_menu {
+    text-indent: -13px;
+    margin-top: -10px;
   }
 }
 </style>
