@@ -16,7 +16,7 @@
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>个人中心</el-dropdown-item>
-          <div @click="back">
+          <div @click="exit">
             <el-dropdown-item>退出</el-dropdown-item>
           </div>
         </el-dropdown-menu>
@@ -37,8 +37,10 @@ export default {
     handleMenu() {
       this.$store.commit("tab/collapseMenu");
     },
-    back() {
-      this.$store.state.token.token = false;
+    exit() {
+      this.cookie.clearCookie("LoginName");
+      this.cookie.clearCookie("openId");
+      this.cookie.clearCookie("LoginTime");
       this.$router.replace({
         name: "login",
       });

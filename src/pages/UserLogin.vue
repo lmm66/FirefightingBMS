@@ -12,9 +12,16 @@
           title="用户名或密码错误!"
           type="error"
         ></el-alert>
+        <el-alert
+          v-show="registerAlert"
+          title="注册成功!"
+          type="success"
+        ></el-alert>
       </div>
-      <div class="header">login</div>
-      <div class="input-wrapper">
+
+      <div class="header" v-show="wantLogin">login</div>
+      <div class="header" v-show="wantResister">Register</div>
+      <div class="input-wrapper" v-show="wantLogin">
         <div class="border-wrapper">
           <input
             type="text"
@@ -31,58 +38,80 @@
             v-model="pass"
             ref="passDom"
           />
-          <img src="../assets/眼睛.png" @click="show" />
+          <img src="../assets/眼睛.png" @click="loginPassShow" />
         </div>
       </div>
-      <div class="action">
-        <div class="btn" @click="readData">login</div>
 
+      <div class="action" v-show="wantLogin">
+        <div class="btn" @click="readData">login</div>
         <div class="btn" @click="saveData">Enroll</div>
       </div>
-      <div class="icon-wrapper">
-        <img class="icon-weixin" src="../assets/微信.png" @click="showVx" />
-        <img class="icon-qq" src="../assets/QQ.png" />
+
+      <div class="input-wrapper" v-show="wantResister">
+        <div class="border-wrapper">
+          <input
+            type="text"
+            placeholder="username"
+            class="border-item"
+            v-model="userResister"
+          />
+        </div>
+        <div class="border-wrapper">
+          <input
+            type="password"
+            placeholder="password"
+            class="border-item"
+            v-model="passResister"
+          />
+        </div>
+        <div class="registerBtn" @click="confirmRegister">点击注册</div>
+        <a href="" class="hasId">已有账号，<span>马上登录</span></a>
       </div>
+
+      <div class="wxLogin" v-show="showwx">
+        <WxLogin
+          :appid="appid"
+          :scope="scope"
+          :redirect_uri="redirect_uri"
+          key="1"
+        ></WxLogin>
+      </div>
+      <div :class="classObject" @click="showVx" v-show="QRcode"></div>
     </div>
-    <transition-group
-      appear
-      name="animate__animated animate__bounce"
-      enter-active-class="animate__swing"
-      leave-active-class="animate__zoomOutUp"
-    >
-      <WxLogin
-        :appid="appid"
-        :scope="scope"
-        :redirect_uri="redirect_uri"
-        v-show="showwx"
-        key="1"
-      ></WxLogin>
-    </transition-group>
   </div>
 </template>
 
 <script>
-// import Mock from "mockjs";
-import "animate.css";
 import WxLogin from "./WxLogin.vue";
 export default {
   name: "UserLogin",
   data() {
     return {
-      user: localStorage.getItem("username"),
-      pass: localStorage.getItem("password"),
+      user: "",
+      pass: "",
+      userResister: "",
+      passResister: "",
+      wantResister: false,
+      wantLogin: true,
       isPass: true,
       isLogin: false,
+      successAlert: false,
+      faultAlert: false,
+      registerAlert: false,
+      showwx: false,
+      QRcode: true,
+      classObject: {
+        wxsvg: true,
+        websvg: false,
+      },
+      time: "",
       appid: "wxe1f5def243e0390b",
       scope: "snsapi_login",
       redirect_uri: "https://abstest.tenpay.com/abs/author/callBack.do",
-      showwx: false,
-      successAlert: false,
-      faultAlert: false,
     };
   },
   methods: {
-    show() {
+    loginPassShow() {
       if (this.isPass) {
         this.$refs.passDom.type = "text";
         this.isPass = !this.isPass;
@@ -92,27 +121,82 @@ export default {
       }
     },
     saveData() {
-      localStorage.setItem("username", this.user);
-      localStorage.setItem("password", this.pass);
+      this.wantLogin = !this.wantLogin;
+      this.wantResister = !this.wantResister;
+      this.QRcode = !this.QRcode;
+    },
+    confirmRegister() {
+      axios({
+        method: "POST",
+        url: `http://1.117.61.116:8081/User?purpose=register&Name=${this.userResister}&Password=${this.passResister}`,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
+      }).then((data) => {
+        if (data.data.info === "注册成功") {
+          this.registerAlert = true;
+          setTimeout(() => {
+            this.wantLogin = !this.wantLogin;
+            this.wantResister = !this.wantResister;
+            this.QRcode = !this.QRcode;
+            this.registerAlert = false;
+          }, 1000);
+        }
+      });
     },
     readData() {
-      if (
-        this.user === localStorage.getItem("username") &&
-        this.pass === localStorage.getItem("password")
-      ) {
-        this.successAlert = true;
-        this.$store.commit("token/changeToken");
-        setTimeout(() => {
-          this.$router.replace({
-            name: "home",
-          });
-        }, 1000);
-      } else {
-        this.faultAlert = true;
-      }
+      axios({
+        method: "GET",
+        url: `http://1.117.61.116:8081/User?purpose=login&Name=${this.user}&Password=${this.pass}`,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
+      }).then((data) => {
+        if (data.data.info === "登录成功") {
+          this.successAlert = true;
+          var date = new Date();
+          var year = date.getFullYear(); //获取当前年份
+          var month = date.getMonth() + 1; //获取当前月份
+          var dat = date.getDate(); //获取当前日
+          var hour = date.getHours(); //获取小时
+          var minutes = date.getMinutes(); //获取分钟
+          var second = date.getSeconds(); //获取秒
+          this.time =
+            year +
+            "-" +
+            month +
+            "-" +
+            dat +
+            " " +
+            hour +
+            ":" +
+            minutes +
+            ":" +
+            second;
+          let loginInfo = {
+            LoginName: this.user,
+            LoginTime: this.time,
+            openId: "asfafsfsfsdfsdfsdfdsf",
+          };
+          this.cookie.setCookie(loginInfo, 7);
+          setTimeout(() => {
+            this.$router.replace({
+              name: "home",
+            });
+          }, 1000);
+        } else {
+          this.faultAlert = true;
+          setTimeout(() => {
+            this.faultAlert = false;
+          }, 1500);
+        }
+      });
     },
     showVx() {
+      this.wantLogin = !this.wantLogin;
       this.showwx = !this.showwx;
+      this.classObject.wxsvg = !this.classObject.wxsvg;
+      this.classObject.websvg = !this.classObject.websvg;
     },
   },
   components: {
@@ -122,6 +206,50 @@ export default {
 </script>
 
 <style scoped>
+.wxsvg {
+  width: 50px;
+  height: 50px;
+  background: url("../assets/wx_l.svg") no-repeat;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  cursor: pointer;
+}
+.websvg {
+  width: 50px;
+  height: 50px;
+  background: url("../assets/web_l.svg") no-repeat;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  cursor: pointer;
+}
+.wxLogin {
+  display: flex;
+  justify-content: center;
+}
+.registerBtn {
+  width: 100%;
+  border: 2px solid #0e92b3;
+  text-align: center;
+  line-height: 40px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+.registerBtn:hover {
+  background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+}
+.hasId {
+  text-decoration: none;
+  color: #fff;
+  font-size: 15px;
+  display: block;
+  text-align: center;
+  margin-top: 30px;
+}
+.hasId span {
+  color: #e8198b;
+}
 .bod {
   height: 100vh;
   display: flex;
@@ -138,6 +266,7 @@ export default {
 }
 .form-wrapper {
   width: 300px;
+  height: 350px;
   background-color: rgba(41, 45, 62, 0.8);
   color: #fff;
   border-radius: 10px;
@@ -170,7 +299,7 @@ export default {
   background-image: linear-gradient(to right, #e8198b, #0eb4dd);
   width: 100%;
   height: 50px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   border-radius: 30px;
   display: flex;
   align-items: center;
@@ -208,29 +337,5 @@ export default {
 
 .action .btn:hover {
   background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
-}
-
-.form-wrapper .icon-wrapper {
-  display: flex;
-  justify-content: space-around;
-  text-align: center;
-  width: 60%;
-  margin: 0 auto;
-  margin-top: 20px;
-  border-top: 1px dashed rgb(146, 146, 146);
-  padding: 20px;
-}
-
-.form-wrapper .icon-wrapper img {
-  font-size: 20px;
-  color: rgb(187, 187, 187);
-  cursor: pointer;
-  border: 1px solid #fff;
-  padding: 5px;
-  border-radius: 20px;
-}
-
-.form-wrapper .icon-wrapper img:hover {
-  background-color: #0e92b3;
 }
 </style>

@@ -5,12 +5,14 @@
         <div class="user">
           <img :src="userImg" />
           <div class="userInfo">
-            <p class="name">Admin</p>
+            <p class="name">{{ loginName }}</p>
             <p class="access">超级管理员</p>
           </div>
           <hr />
           <div class="loginInfo">
-            <p>上次登录时间:<span>2022-6-4</span></p>
+            <p>
+              上次登录时间:<span>{{ loginTime }}</span>
+            </p>
             <p>上次登录地点:<span>郑州</span></p>
           </div>
         </div>
@@ -39,7 +41,7 @@
             <div class="sale">{{ item.value }}</div>
             <!-- <div class="txt">{{ item.name }}</div> -->
             <div style="width: 150px">
-              <el-select v-model="value" placeholder="请选择" size="mini">
+              <el-select v-model="SeleValue" placeholder="请选择" size="mini">
                 <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -71,6 +73,8 @@ export default {
   name: "Home",
   data() {
     return {
+      loginName: "",
+      loginTime: "",
       userImg: require("../assets/userImg.jpg"),
       tableData: [
         {
@@ -100,17 +104,17 @@ export default {
       },
       countData: [
         {
-          value: "36起",
+          value: "",
           icon: "map-location",
           color: "#2ec7c9",
         },
         {
-          value: "210个",
+          value: "",
           icon: "video-camera",
           color: "#ffb980",
         },
         {
-          value: "25~35℃",
+          value: "",
           icon: "sunny",
           color: "#5ab1ef",
         },
@@ -137,13 +141,44 @@ export default {
           label: "云南省昆明市盘龙区茨坝街道与龙泉街道交界处附近",
         },
       ],
-      value: "",
+      SeleValue: "",
+      Info: [
+        { num: "36起", sum: "67个", temperature: "19~33℃" },
+        { num: "14起", sum: "22个", temperature: "17~26℃" },
+        { num: "12起", sum: "18个", temperature: "12~24℃" },
+        { num: "17起", sum: "26个", temperature: "14~29℃" },
+        { num: "23起", sum: "48个", temperature: "18~25℃" },
+      ],
     };
   },
   components: {
     chartOne,
     chartTwo,
     ChartThree,
+  },
+  watch: {
+    SeleValue: {
+      deep: true,
+      immediate: true,
+      handler(newVal, oldVal) {
+        this.options.forEach((item, index) => {
+          if (newVal == item.value) {
+            this.countData[0].value = this.Info[index].num;
+            this.countData[1].value = this.Info[index].sum;
+            this.countData[2].value = this.Info[index].temperature;
+            if (index === 1) {
+              this.countData[2].icon = "lightning";
+            } else {
+              this.countData[2].icon = "sunny";
+            }
+          }
+        });
+      },
+    },
+  },
+  mounted() {
+    this.loginName = this.cookie.getCookie("LoginName");
+    this.loginTime = this.cookie.getCookie("LoginTime");
   },
 };
 </script>

@@ -23,13 +23,21 @@
         <el-form-item>
           <div class="houseMsg">
             <el-input
-              v-for="(val, key, index) in firehouse[0]"
+              v-for="(val, key, index) in firehouseEd[0]"
               :key="index"
               v-model="firehouse[firehouse.length - 1][key]"
               :placeholder="labelListAgain[index]"
               autocomplete="off"
               style="width: 200px; margin-bottom: 20px"
             ></el-input>
+            <el-date-picker
+              v-model="firehouse[firehouse.length - 1]['date']"
+              type="date"
+              placeholder="选择日期时间"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy/MM/dd"
+            >
+            </el-date-picker>
           </div>
         </el-form-item>
       </el-form>
@@ -48,7 +56,7 @@
         <el-form-item>
           <div class="houseMsg">
             <el-input
-              v-for="(val, key, index) in firehouse[0]"
+              v-for="(val, key, index) in firehouseEd[0]"
               :key="index"
               v-model="firehouse[indexStore][key]"
               :placeholder="labelListAgain[index]"
@@ -56,6 +64,14 @@
               autocomplete="off"
               style="width: 200px; margin-bottom: 20px"
             ></el-input>
+            <el-date-picker
+              v-model="firehouse[indexStore]['date']"
+              type="date"
+              placeholder="选择日期时间"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy/MM/dd"
+            >
+            </el-date-picker>
           </div>
         </el-form-item>
       </el-form>
@@ -66,7 +82,7 @@
     </el-dialog>
     <el-col :span="24">
       <el-card>
-        <el-table border :data="filHouse" style="width: 100%">
+        <el-table border :data="filHouse" style="width: 100%" height="536">
           <el-table-column
             v-for="(item, index) in labelList"
             :key="item"
@@ -113,9 +129,18 @@ export default {
       dialogFormVisible: false,
       dialogFormVisible_Edit: false,
       labelList: ["编号", "站名", "电话", "日期", "地址"],
-      labelListAgain: ["编号", "站名", "电话", "日期", "地址", "状态"],
+      labelListAgain: ["编号", "站名", "电话", "地址", "状态"],
       widthList: ["100", "250", "150", "200", "250"],
       propList: ["index", "name", "phone", "date", "address"],
+      firehouseEd: [
+        {
+          index: "",
+          name: "",
+          phone: "",
+          address: "",
+          state: "",
+        },
+      ],
       search: "",
       firehouse: [],
       indexStore: "0",

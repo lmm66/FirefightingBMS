@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '@/store'
+import cookie from '../util/cookie';
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -63,19 +64,18 @@ const router = new VueRouter({
         },
     ]
 })
-// 全局前置路由守卫————初始化及每次路由切换之前被调用
-// router.beforeEach((to,from,next) => {
-//     if(to.meta.isAuth) {    // 判断是否需要权限鉴定
-//         if(store.state.token.token){
-//             next();
-//         }else{
-//             alert('请登录!');
-//             next('/')
-//         }
-//     }else{
-//         next();
-//     }
-// })
+router.beforeEach((to,from,next) => {
+    if(to.meta.isAuth) {    
+        if(cookie.getCookie("LoginName")){
+            next();
+        }else{
+            alert('请登录!');
+            next('/')
+        }
+    }else{
+        next();
+    }
+})
 router.afterEach((to,from) => {
     document.title = to.meta.title;
 })

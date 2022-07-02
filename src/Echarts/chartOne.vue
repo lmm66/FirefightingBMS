@@ -42,7 +42,7 @@ export default {
         {
           left: "center",
           top: "-1%",
-          text: "皮家山森林火灾温度变化",
+          text: "皮家山森林火灾温度变化(°C)",
         },
       ],
       tooltip: {

@@ -43,8 +43,6 @@ export default {
 <style scoped>
 .body {
   background-color: #19143c;
-  /* margin-left: -20px;
-  margin-right: -20px; */
   padding: 0 10px;
   margin: 0 -20px;
 }

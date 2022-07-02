@@ -2,7 +2,7 @@
   <div>
     <iframe
       scrolling="no"
-      width="300"
+      width="600"
       height="400"
       frameBorder="0"
       allowTransparency="true"
@@ -15,7 +15,7 @@
 export default {
   data() {
     return {
-      src: "https://open.weixin.qq.com/connect/qrconnect?appid=wxe1f5def243e0390b&scope=snsapi_login&redirect_uri=https://abstest.tenpay.com/abs/author/callBack.do&state=0001&login_type=jssdk&self_redirect=default&style=black&href=./wx.css",
+      // src: "https://open.weixin.qq.com/connect/qrconnect?appid=wxe1f5def243e0390b&scope=snsapi_login&redirect_uri=https://abstest.tenpay.com/abs/author/callBack.do&state=0001&login_type=jssdk&self_redirect=default&style=black&href=./wx.css",
     };
   },
   computed: {
@@ -51,7 +51,7 @@ export default {
     //提供"black"、"white"可选，默认为黑色文字描述。详见文档底部FAQ
     theme: {
       type: String,
-      default: "black",
+      default: "white",
     },
     // 自定义样式链接，第三方可根据实际需求覆盖默认样式。详见文档底部FAQ
     href: {
